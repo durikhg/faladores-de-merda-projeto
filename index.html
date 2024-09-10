@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Ranking dos Faladores de Bosta</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <h1>Ranking dos Faladores de Bosta</h1>
+
+  <label for="falador">quem falou bosta:</label>
+  <select id="falador">
+    <option value="stalker">Stalker</option>
+    <option value="willia">Willia</option>
+    <option value="caio">Caio</option>
+    <option value="durik">Durik</option>
+    <option value="akattana">Akattana</option>
+    <option value="eder">Eder</option>
+    <option value="larih">Larih</option>
+  </select>
+  
+
+  <br><br>
+  <label for="bostaFalada">O que ele falou:</label>
+  <input type="text" id="bostaFalada" placeholder="Digite o motivo da bosta">
+  
+
+  <br><br>
+  <button onclick="registrarBosta()">Registrar Bosta</button>
+
+  <h2>Ranking Geral</h2>
+  <table id="rankingGeral">
+    <thead>
+      <tr>
+        <th>Posição</th>
+        <th>Falador</th>
+        <th>Total de Bostas Faladas</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <h2>Ranking Diário</h2>
+  <table id="rankingDiario">
+    <thead>
+      <tr>
+        <th>Posição</th>
+        <th>Falador</th>
+        <th>Bostas Faladas no Dia</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+  <h2>Ranking Semanal</h2>
+  <table id="rankingSemanal">
+    <thead>
+      <tr>
+        <th>Posição</th>
+        <th>Falador</th>
+        <th>Bostas Faladas na Semana</th>
+      </tr>
+    </thead>
+    <tbody>
+      
+    </tbody>
+  </table>
+
+  <h2>Ranking Mensal</h2>
+  <table id="rankingMensal">
+    <thead>
+      <tr>
+        <th>Posição</th>
+        <th>Falador</th>
+        <th>Bostas Faladas no Mês</th>
+      </tr>
+    </thead>
+    <tbody>
+
+    </tbody>
+  </table>
+
+
+  <h2>Histórico de Bostas Faladas</h2>
+  <table id="historico">
+    <thead>
+      <tr>
+        <th>Horário</th>
+        <th>Falador</th>
+        <th>Motivo da Bosta</th>
+      </tr>
+    </thead>
+    <tbody>
+  
+    </tbody>
+  </table>
+
+  <script>
+   
+    const faladores = ['stalker', 'willia', 'caio', 'durik', 'akattana', 'eder', 'larih'];
+    
+
+    let registros = {
+      geral: JSON.parse(localStorage.getItem('registrosGeral')) || {},
+      diario: JSON.parse(localStorage.getItem('registrosDiario')) || {},
+      semanal: JSON.parse(localStorage.getItem('registrosSemanal')) || {},
+      mensal: JSON.parse(localStorage.getItem('registrosMensal')) || {}
+    };
+    
+    let historico = JSON.parse(localStorage.getItem('historico')) || [];
+
+    faladores.forEach(f => {
+      if (!registros.geral[f]) registros.geral[f] = 0;
+      if (!registros.diario[f]) registros.diario[f] = 0;
+      if (!registros.semanal[f]) registros.semanal[f] = 0;
+      if (!registros.mensal[f]) registros.mensal[f] = 0;
+    });
+
+
+    function registrarBosta() {
+      const falador = document.getElementById('falador').value;
+      const bostaFalada = document.getElementById('bostaFalada').value;
+      
+      if (bostaFalada.trim() === "") {
+        alert("Por favor, insira o motivo da bosta.");
+        return;
+      }
+
+ 
+      const horario = new Date().toLocaleString();
+
+
+      registros.geral[falador]++;
+      registros.diario[falador]++;
+      registros.semanal[falador]++;
+      registros.mensal[falador]++;
+
+      localStorage.setItem('registrosGeral', JSON.stringify(registros.geral));
+      localStorage.setItem('registrosDiario', JSON.stringify(registros.diario));
+      localStorage.setItem('registrosSemanal', JSON.stringify(registros.semanal));
+      localStorage.setItem('registrosMensal', JSON.stringify(registros.mensal));
+
+
+      historico.push({
+        horario: horario,
+        falador: falador,
+        motivo: bostaFalada
+      });
+
+
+      localStorage.setItem('historico', JSON.stringify(historico));
+
+      
+      atualizarTabelas();
+      atualizarHistorico();
+
+
+      document.getElementById('bostaFalada').value = "";
+    }
+
+
+    function atualizarTabelas() {
+      atualizarTabela('rankingGeral', registros.geral);
+      atualizarTabela('rankingDiario', registros.diario);
+      atualizarTabela('rankingSemanal', registros.semanal);
+      atualizarTabela('rankingMensal', registros.mensal);
+    }
+
+
+    function atualizarTabela(idTabela, dados) {
+      const tabela = document.getElementById(idTabela).querySelector('tbody');
+      tabela.innerHTML = '';
+
+      const ranking = Object.entries(dados).sort((a, b) => b[1] - a[1]);
+
+      ranking.forEach(([falador, count], index) => {
+        const row = tabela.insertRow();
+        const posicaoCell = row.insertCell(0);
+        const faladorCell = row.insertCell(1);
+        const countCell = row.insertCell(2);
+        posicaoCell.textContent = index + 1;
+        faladorCell.textContent = falador;
+        countCell.textContent = count;
+      });
+    }
+
+
+    function atualizarHistorico() {
+      const tabelaHistorico = document.getElementById('historico').querySelector('tbody');
+      tabelaHistorico.innerHTML = '';
+
+      historico.forEach(entry => {
+        const row = tabelaHistorico.insertRow();
+        const horarioCell = row.insertCell(0);
+        const faladorCell = row.insertCell(1);
+        const motivoCell = row.insertCell(2);
+
+        horarioCell.textContent = entry.horario;
+        faladorCell.textContent = entry.falador;
+        motivoCell.textContent = entry.motivo;
+      });
+    }
+
+ 
+    atualizarTabelas();
+    atualizarHistorico();
+  </script>
+
+</body>
+</html>
+

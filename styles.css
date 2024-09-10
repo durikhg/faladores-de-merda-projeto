@@ -1,0 +1,76 @@
+body {
+    background-color: #00FF00; /* Verde chamativo de fundo */
+    color: #0000FF; /* Texto azul vibrante */
+    font-family: 'Comic Sans MS', sans-serif; /* Clássico dos anos 2000 */
+    text-align: center;
+    margin: 20px;
+    animation: bodyFlash 2s infinite alternate;
+  }
+
+  h1 {
+    color: #FF0000; /* Vermelho vibrante */
+    text-shadow: 2px 2px #000000;
+    animation: textFlash 2s infinite alternate;
+  }
+
+  label {
+    font-size: 20px;
+    text-decoration: underline;
+  }
+
+  select, input, button {
+    font-family: 'Comic Sans MS', sans-serif;
+    font-size: 18px;
+    padding: 10px;
+    border: 5px solid #FFD700; /* Amarelo ouro */
+    background-color: #FF69B4; /* Rosa chamativo */
+    color: #FFFFFF;
+    text-shadow: 1px 1px #000;
+    animation: buttonMove 5s infinite alternate;
+  }
+
+  table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    background-color: #FFFACD; /* Cor de fundo amarelo suave */
+    border: 5px dashed #0000FF; /* Bordas azuis vibrantes */
+    animation: tableGlow 3s infinite alternate;
+  }
+
+  th, td {
+    border: 3px solid #000000; /* Bordas grossas em preto */
+    padding: 10px;
+    font-size: 18px;
+  }
+
+  th {
+    background-color: #FF4500; /* Fundo laranja chamativo */
+    color: #FFFFFF;
+  }
+
+  td {
+    background-color: #FFFFFF;
+    color: #000000;
+  }
+
+  /* Animações clássicas dos anos 2000 */
+  @keyframes bodyFlash {
+    0% { background-color: #00FF00; }
+    100% { background-color: #FF00FF; }
+  }
+
+  @keyframes textFlash {
+    0% { color: #FF0000; }
+    100% { color: #FFFF00; }
+  }
+
+  @keyframes buttonMove {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(10deg); }
+  }
+
+  @keyframes tableGlow {
+    0% { box-shadow: 0 0 10px #00FFFF; }
+    100% { box-shadow: 0 0 20px #FF00FF; }
+  }
